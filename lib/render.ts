@@ -96,9 +96,9 @@ export async function runGenerationPipeline(
 
   if (IS_VERCEL) {
     // Vercel Serverless Function mode: render via @remotion/renderer and @sparticuz/chromium
-    const { bundle } = await import('@remotion/bundler');
-    const { selectComposition, renderMedia } = await import('@remotion/renderer');
-    const chromium = (await import('@sparticuz/chromium')).default;
+    const { bundle } = await import(/* webpackIgnore: true */ '@remotion/bundler');
+    const { selectComposition, renderMedia } = await import(/* webpackIgnore: true */ '@remotion/renderer');
+    const chromium = (await import(/* webpackIgnore: true */ '@sparticuz/chromium')).default;
 
     chromium.setGraphicsMode = false;
     const executablePath = await chromium.executablePath();
