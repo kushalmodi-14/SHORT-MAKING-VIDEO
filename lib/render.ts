@@ -96,22 +96,34 @@ export async function runGenerationPipeline(
 
   if (IS_VERCEL) {
     // Vercel Serverless Function mode: render via @remotion/renderer and @sparticuz/chromium
-    const { bundle } = await import(/* webpackIgnore: true */ '@remotion/bundler');
     const { selectComposition, renderMedia } = await import(/* webpackIgnore: true */ '@remotion/renderer');
     const chromium = (await import(/* webpackIgnore: true */ '@sparticuz/chromium')).default;
 
     chromium.setGraphicsMode = false;
     const executablePath = await chromium.executablePath();
 
-    const serveUrl = await bundle({
-      entryPoint: path.join(REMOTION_DIR, 'src', 'index.ts'),
-      outDir: path.join(os.tmpdir(), 'remotion-bundle'),
-    });
+    // Prefer pre-bundled Remotion build to avoid runtime bundling overhead and missing dependencies
+    const prebuiltBundle = path.join(ROOT_DIR, 'remotion-build');
+    let serveUrl: string;
+
+    if (fs.existsSync(path.join(prebuiltBundle, 'index.html'))) {
+      serveUrl = prebuiltBundle;
+    } else {
+      const { bundle } = await import(/* webpackIgnore: true */ '@remotion/bundler');
+      serveUrl = await bundle({
+        entryPoint: path.join(REMOTION_DIR, 'src', 'index.ts'),
+        outDir: path.join(os.tmpdir(), 'remotion-bundle'),
+      });
+    }
 
     const composition = await selectComposition({
       serveUrl,
       id: 'ShortTemplate',
       inputProps,
+      browserExecutable: executablePath,
+      chromiumOptions: {
+        args: chromium.args,
+      },
     });
 
     await renderMedia({
