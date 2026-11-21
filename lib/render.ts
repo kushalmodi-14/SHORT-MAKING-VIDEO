@@ -1,14 +1,19 @@
-import { execSync, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { BeatsJson } from './types';
 import { updateJob } from './jobs';
-import { generateTsx } from './chains/tsxChain';
+import { synthesizeVoiceNode, getFfmpegPath } from './tts';
 
 const ROOT_DIR = process.cwd();
+const IS_VERCEL = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const BASE_DIR = IS_VERCEL ? path.join(os.tmpdir(), 'faceless-shorts') : ROOT_DIR;
+const PUBLIC_VIDEOS_DIR = IS_VERCEL
+  ? path.join(os.tmpdir(), 'videos')
+  : path.join(ROOT_DIR, 'public', 'videos');
+const SHORTS_DIR = path.join(BASE_DIR, 'shorts');
 const REMOTION_DIR = path.join(ROOT_DIR, 'remotion');
-const SHORTS_DIR = path.join(ROOT_DIR, 'shorts');
-const PUBLIC_VIDEOS_DIR = path.join(ROOT_DIR, 'public', 'videos');
 
 export async function runGenerationPipeline(
   jobId: string,
@@ -16,7 +21,7 @@ export async function runGenerationPipeline(
   _initialTsxCode: string,
   _initialVoGenTs: string
 ): Promise<string> {
-  // Ensure directories exist
+  // 1. Ensure required writable directories exist
   if (!fs.existsSync(PUBLIC_VIDEOS_DIR)) {
     fs.mkdirSync(PUBLIC_VIDEOS_DIR, { recursive: true });
   }
@@ -27,61 +32,61 @@ export async function runGenerationPipeline(
     fs.mkdirSync(shotDir, { recursive: true });
   }
 
-  const remotionShotDir = path.join(REMOTION_DIR, 'src', 'shots', shortSlug);
-  if (!fs.existsSync(remotionShotDir)) {
-    fs.mkdirSync(remotionShotDir, { recursive: true });
-  }
-
-  // 1. Write initial beats contract
   const beatsPath = path.join(shotDir, 'beats.json');
   fs.writeFileSync(beatsPath, JSON.stringify(beats, null, 2), 'utf-8');
 
-  // 2. Synthesize audio voiceover with word timestamps
+  // 2. Synthesize audio voiceover (pure Node.js — no Python required on Vercel)
   updateJob(jobId, {
     status: 'synthesizing_voice',
     progress: 25,
     message: 'Synthesizing voiceover narration with exact word sync...',
   });
 
-  const voGenTsPath = path.join(remotionShotDir, 'vo.gen.ts');
+  const vdir = path.join(shotDir, 'voice');
+  let activeBeats = beats;
+  let voiceWavPath = '';
+
   try {
-    execSync(`python tools/gen_voice.py --beats "${beatsPath}" --emit-ts "${voGenTsPath}"`, {
-      cwd: ROOT_DIR,
-      stdio: 'inherit',
-    });
+    const { voiceWavPath: synthesizedPath, updatedVo } = await synthesizeVoiceNode(beats, vdir);
+    voiceWavPath = synthesizedPath;
+    activeBeats.vo = updatedVo;
+    fs.writeFileSync(beatsPath, JSON.stringify(activeBeats, null, 2), 'utf-8');
   } catch (err: any) {
     console.warn('Voice synthesis step warning:', err.message);
   }
 
-  // Reload updated beats (contains real tempo-adjusted line durations and word times)
-  let activeBeats = beats;
-  try {
-    if (fs.existsSync(beatsPath)) {
-      activeBeats = JSON.parse(fs.readFileSync(beatsPath, 'utf-8'));
-    }
-  } catch {}
-
-  // 3. Generate production TSX composition synced with the exact audio timing
+  // 3. Prepare parameterized inputProps for the ShortTemplate composition
   updateJob(jobId, {
-    status: 'generating_tsx',
-    progress: 40,
-    message: 'Generating visual Remotion TSX composition...',
+    status: 'rendering',
+    progress: 45,
+    message: 'Preparing Remotion rendering environment...',
     beats: activeBeats,
   });
 
-  const tsxCode = await generateTsx(activeBeats);
-  fs.writeFileSync(path.join(remotionShotDir, `${activeBeats.composition}.tsx`), tsxCode, 'utf-8');
+  const inputProps = {
+    title: activeBeats.title,
+    kicker: (
+      activeBeats.beats?.find((b) => b.kicker)?.kicker ||
+      activeBeats.niche ||
+      'EXPLAINED'
+    ).toUpperCase(),
+    windowTitle: `${(activeBeats.niche || 'Topic').toUpperCase()} — OVERVIEW`,
+    terminalSession: activeBeats.terminalSession || [],
+    vo: activeBeats.vo || [],
+    durationSec: activeBeats.format?.durationSec || 35,
+  };
 
-  // 4. Update composition registry
-  updateJob(jobId, {
-    status: 'rendering',
-    progress: 48,
-    message: 'Updating Remotion composition registry...',
-  });
+  const destinationName = `${activeBeats.composition}.mp4`;
+  const rawRenderedFile = path.join(
+    IS_VERCEL ? os.tmpdir() : path.join(REMOTION_DIR, 'out'),
+    `raw-${destinationName}`
+  );
+  const rawRenderDir = path.dirname(rawRenderedFile);
+  if (!fs.existsSync(rawRenderDir)) {
+    fs.mkdirSync(rawRenderDir, { recursive: true });
+  }
 
-  execSync('node scripts/gen-registry.mjs', { cwd: REMOTION_DIR, stdio: 'inherit' });
-
-  // 5. Render video frames with real-time frame percentage streaming
+  // 4. Render Remotion video frames
   updateJob(jobId, {
     status: 'rendering',
     progress: 50,
@@ -89,22 +94,38 @@ export async function runGenerationPipeline(
     message: `${activeBeats.composition}: 0%`,
   });
 
-  await new Promise<void>((resolve, reject) => {
-    const child = spawn(
-      'node',
-      ['scripts/render-all.mjs', activeBeats.composition, '--scale=1'],
-      { cwd: REMOTION_DIR, shell: true }
-    );
+  if (IS_VERCEL) {
+    // Vercel Serverless Function mode: render via @remotion/renderer and @sparticuz/chromium
+    const { bundle } = await import('@remotion/bundler');
+    const { selectComposition, renderMedia } = await import('@remotion/renderer');
+    const chromium = (await import('@sparticuz/chromium')).default;
 
-    let errorOutput = '';
+    chromium.setGraphicsMode = false;
+    const executablePath = await chromium.executablePath();
 
-    child.stdout.on('data', (chunk: Buffer) => {
-      const text = chunk.toString();
-      process.stdout.write(text);
+    const serveUrl = await bundle({
+      entryPoint: path.join(REMOTION_DIR, 'src', 'index.ts'),
+      outDir: path.join(os.tmpdir(), 'remotion-bundle'),
+    });
 
-      const match = text.match(/(\d{1,3})%/);
-      if (match) {
-        const pct = Math.min(100, Math.max(0, parseInt(match[1], 10)));
+    const composition = await selectComposition({
+      serveUrl,
+      id: 'ShortTemplate',
+      inputProps,
+    });
+
+    await renderMedia({
+      serveUrl,
+      composition,
+      inputProps,
+      outputLocation: rawRenderedFile,
+      codec: 'h264',
+      browserExecutable: executablePath,
+      chromiumOptions: {
+        args: chromium.args,
+      },
+      onProgress: ({ progress }: { progress: number }) => {
+        const pct = Math.min(100, Math.max(0, Math.round(progress * 100)));
         const overallProgress = Math.min(95, 50 + Math.round(pct * 0.45));
         updateJob(jobId, {
           status: 'rendering',
@@ -112,47 +133,100 @@ export async function runGenerationPipeline(
           renderPercent: pct,
           message: `${activeBeats.composition}: ${pct}%`,
         });
-      }
+      },
+    });
+  } else {
+    // Local development mode: execute render via local Remotion scripts
+    await new Promise<void>((resolve, reject) => {
+      const child = spawn(
+        'node',
+        ['scripts/render-all.mjs', 'ShortTemplate', '--scale=1'],
+        { cwd: REMOTION_DIR, shell: true }
+      );
+
+      let errorOutput = '';
+
+      child.stdout.on('data', (chunk: Buffer) => {
+        const text = chunk.toString();
+        process.stdout.write(text);
+
+        const match = text.match(/(\d{1,3})%/);
+        if (match) {
+          const pct = Math.min(100, Math.max(0, parseInt(match[1], 10)));
+          const overallProgress = Math.min(95, 50 + Math.round(pct * 0.45));
+          updateJob(jobId, {
+            status: 'rendering',
+            progress: overallProgress,
+            renderPercent: pct,
+            message: `${activeBeats.composition}: ${pct}%`,
+          });
+        }
+      });
+
+      child.stderr.on('data', (chunk: Buffer) => {
+        const text = chunk.toString();
+        errorOutput += text;
+        process.stderr.write(text);
+      });
+
+      child.on('close', (code) => {
+        if (code === 0) resolve();
+        else reject(new Error(`Render failed (code ${code}): ${errorOutput.slice(-300)}`));
+      });
+
+      child.on('error', (err) => reject(err));
     });
 
-    child.stderr.on('data', (chunk: Buffer) => {
-      const text = chunk.toString();
-      errorOutput += text;
-      process.stderr.write(text);
-    });
-
-    child.on('close', (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`Render failed (code ${code}): ${errorOutput.slice(-300)}`));
-      }
-    });
-
-    child.on('error', (err) => reject(err));
-  });
-
-  const rawRenderedFile = path.join(REMOTION_DIR, 'out', `${activeBeats.composition}.mp4`);
-  if (!fs.existsSync(rawRenderedFile)) {
-    throw new Error(`Rendered video file not found at: ${rawRenderedFile}`);
+    const localOut = path.join(REMOTION_DIR, 'out', 'ShortTemplate.mp4');
+    if (fs.existsSync(localOut)) {
+      fs.copyFileSync(localOut, rawRenderedFile);
+    }
   }
 
-  // 6. Mux studio audio onto the rendered MP4
-  const destinationName = `${activeBeats.composition}.mp4`;
+  // 5. Audio-Video Muxing using ffmpeg-static (no system ffmpeg install required)
   const finalVoicedMp4 = path.join(PUBLIC_VIDEOS_DIR, destinationName);
-  const voiceWav = path.join(shotDir, 'voice', 'voice.wav');
+  const voiceWav = voiceWavPath || path.join(vdir, 'voice.wav');
+  const ffmpegBin = getFfmpegPath();
 
-  if (fs.existsSync(voiceWav)) {
+  if (fs.existsSync(voiceWav) && fs.existsSync(rawRenderedFile)) {
     updateJob(jobId, {
       progress: 98,
       message: 'Muxing voiceover narration onto video...',
     });
 
     const duration = activeBeats.format?.durationSec || 35;
-    execSync(
-      `ffmpeg -y -v error -i "${rawRenderedFile}" -i "${voiceWav}" -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k -t ${duration} "${finalVoicedMp4}"`
-    );
-  } else {
+    await new Promise<void>((resolve) => {
+      const proc = spawn(ffmpegBin, [
+        '-y',
+        '-v',
+        'error',
+        '-i',
+        rawRenderedFile,
+        '-i',
+        voiceWav,
+        '-map',
+        '0:v',
+        '-map',
+        '1:a',
+        '-c:v',
+        'copy',
+        '-c:a',
+        'aac',
+        '-b:a',
+        '192k',
+        '-t',
+        String(duration),
+        finalVoicedMp4,
+      ]);
+
+      proc.on('close', () => resolve());
+      proc.on('error', () => {
+        // Fallback to video copy if muxing fails
+        fs.copyFileSync(rawRenderedFile, finalVoicedMp4);
+        resolve();
+      });
+    });
+  } else if (fs.existsSync(rawRenderedFile)) {
     fs.copyFileSync(rawRenderedFile, finalVoicedMp4);
   }
 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 export async function GET(
   req: Request,
@@ -11,8 +12,10 @@ export async function GET(
     const cleanFilename = path.basename(filename);
 
     const rootDir = process.cwd();
-    // Check public/videos first, then remotion/out as fallback
+    // Check /tmp first (for Vercel serverless), then public/videos and remotion/out
     const possiblePaths = [
+      path.join(os.tmpdir(), 'videos', cleanFilename),
+      path.join(os.tmpdir(), 'faceless-shorts', 'videos', cleanFilename),
       path.join(rootDir, 'public', 'videos', cleanFilename),
       path.join(rootDir, 'remotion', 'out', cleanFilename),
     ];

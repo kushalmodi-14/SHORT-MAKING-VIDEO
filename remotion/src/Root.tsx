@@ -1,12 +1,20 @@
 import React from 'react';
 import { Composition } from 'remotion';
 import { shots } from './registry.gen';
+import { ShortTemplate, defaultShortProps } from './shots/ShortTemplate';
 
-// Every shot file exports `compositionConfig` + a default component. gen-registry.mjs
-// discovers them into registry.gen. This maps each to a <Composition>.
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      <Composition
+        id="ShortTemplate"
+        component={ShortTemplate as any}
+        defaultProps={defaultShortProps}
+        durationInFrames={35 * 30}
+        fps={30}
+        width={1080}
+        height={1920}
+      />
       {shots.map(({ Comp, config }) => (
         <Composition
           key={config.id}
