@@ -1,0 +1,82 @@
+{
+  "id": "short-cold-shower-dopamine",
+  "title": "Why Cold Showers Spike Dopamine for Hours",
+  "composition": "ColdShowerDopamine",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 35
+  },
+  "niche": "science",
+  "terminalSession": [],
+  "vo": [
+    {
+      "beat": "hook",
+      "text": "Cold showers feel brutal, but they fire up your brain's dopamine for hours.",
+      "start": 0.2,
+      "end": 3.8
+    },
+    {
+      "beat": "setup",
+      "text": "Most think a quick chill just wakes you up, missing the chemistry that keeps you motivated all day.",
+      "start": 4,
+      "end": 9.5
+    },
+    {
+      "beat": "reveal",
+      "text": "First, the cold triggers norepinephrine, sharpening focus. Second, it shocks your skin, releasing beta‑endorphins. Finally, the stress response spikes dopamine, the reward hormone, and it stays elevated for up to eight hours.",
+      "start": 10,
+      "end": 23.5
+    },
+    {
+      "beat": "twist",
+      "text": "Want the boost faster? End your shower with 30 seconds of ice‑cold water at 0°C – the sudden plunge doubles dopamine release.",
+      "start": 24,
+      "end": 29
+    },
+    {
+      "beat": "loop",
+      "text": "So next time you shiver, remember: that icy rush is your brain’s power‑up, looping back to the hook.",
+      "start": 30,
+      "end": 34.5
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "start": 0,
+      "end": 120,
+      "visual": "Close‑up of a person stepping under a freezing shower, steam swirling, text overlay: “Cold showers = dopamine?”",
+      "kicker": "HOOK"
+    },
+    {
+      "id": "setup",
+      "start": 120,
+      "end": 300,
+      "visual": "Animated diagram of brain chemicals, norepinephrine and dopamine icons lighting up.",
+      "kicker": "PROBLEM"
+    },
+    {
+      "id": "reveal",
+      "start": 300,
+      "end": 720,
+      "visual": "Three‑step split‑screen: 1) nerve firing, 2) endorphin burst, 3) dopamine wave expanding over a clock showing hours.",
+      "kicker": "SOLUTION"
+    },
+    {
+      "id": "twist",
+      "start": 720,
+      "end": 900,
+      "visual": "Timer counting down 30 seconds, water temperature gauge dropping to 0°C, bold text: “Ice‑cold 30s = double boost”.",
+      "kicker": "POWER MOVE"
+    },
+    {
+      "id": "loop",
+      "start": 900,
+      "end": 1050,
+      "visual": "Looping animation of dopamine molecule circling back to the shower scene, creating seamless loop.",
+      "kicker": "LOOP"
+    }
+  ]
+}

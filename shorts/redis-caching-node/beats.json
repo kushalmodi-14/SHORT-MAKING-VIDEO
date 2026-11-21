@@ -1,0 +1,155 @@
+{
+  "id": "redis-caching-node",
+  "title": "Speed Up Node.js with Redis Caching",
+  "composition": "RedisCacheShort",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 35
+  },
+  "niche": "terminal",
+  "terminalSession": [
+    {
+      "kind": "cmd",
+      "text": "npm i ioredis",
+      "at": 300,
+      "type": true
+    },
+    {
+      "kind": "out",
+      "text": "+ ioredis@4.28.5",
+      "at": 360,
+      "type": false
+    },
+    {
+      "kind": "cmd",
+      "text": "node",
+      "at": 600,
+      "type": true
+    },
+    {
+      "kind": "out",
+      "text": "const Redis = require('ioredis');",
+      "at": 630,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "const redis = new Redis();",
+      "at": 660,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "async function getUser(id){",
+      "at": 690,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "  const cached = await redis.get(`user:${id}`);",
+      "at": 720,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "  if(cached) return JSON.parse(cached);",
+      "at": 750,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "  const user = await db.findUser(id);",
+      "at": 780,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "  await redis.setex(`user:${id}`, 60, JSON.stringify(user));",
+      "at": 810,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "  return user;",
+      "at": 840,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "}",
+      "at": 870,
+      "type": false
+    }
+  ],
+  "vo": [
+    {
+      "beat": "hook",
+      "text": "Want your Node API to answer in milliseconds, not seconds?",
+      "start": 0.2,
+      "end": 3.2
+    },
+    {
+      "beat": "setup",
+      "text": "Most devs hit the database on every request, killing performance.",
+      "start": 3.5,
+      "end": 9.5
+    },
+    {
+      "beat": "reveal",
+      "text": "First, install ioredis. Then create a Redis client. Finally, wrap your DB call: check the cache, return it if present, otherwise fetch, store, and return.",
+      "start": 10,
+      "end": 23.5
+    },
+    {
+      "beat": "twist",
+      "text": "Pro tip: use SETEX to auto‑expire the cache, so stale data never lingers!",
+      "start": 24,
+      "end": 29.5
+    },
+    {
+      "beat": "loop",
+      "text": "Now every request is lightning fast—watch that latency drop!",
+      "start": 30,
+      "end": 34.5
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "start": 0,
+      "end": 4,
+      "visual": "Fast‑forward UI timer ticking, then a red “SLOW” badge flashing",
+      "kicker": "HOOK"
+    },
+    {
+      "id": "setup",
+      "start": 4,
+      "end": 10,
+      "visual": "Code editor shows repetitive DB query loop, red error icons",
+      "kicker": "PROBLEM"
+    },
+    {
+      "id": "reveal",
+      "start": 10,
+      "end": 24,
+      "visual": "Terminal installs ioredis, then shows concise cache wrapper code scrolling",
+      "kicker": "SOLUTION"
+    },
+    {
+      "id": "twist",
+      "start": 24,
+      "end": 30,
+      "visual": "Highlight SETEX line with neon glow, clock icon ticking down",
+      "kicker": "POWER MOVE"
+    },
+    {
+      "id": "loop",
+      "start": 30,
+      "end": 35,
+      "visual": "Loop back to opening timer speeding up, creating seamless loop",
+      "kicker": "LOOP"
+    }
+  ]
+}

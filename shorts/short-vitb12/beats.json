@@ -1,0 +1,453 @@
+{
+  "id": "short-vitb12",
+  "title": "3 Surprising Signs of Vitamin B12 Deficiency",
+  "composition": "VitaminB12Signs",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 35
+  },
+  "niche": "health",
+  "terminalSession": [],
+  "vo": [
+    {
+      "beat": "hook",
+      "text": "Feeling tired, dizzy, or just off? You might be missing a crucial vitamin.",
+      "start": 0.2,
+      "end": 4.45,
+      "words": [
+        {
+          "w": "Feeling",
+          "start": 0.2,
+          "end": 0.468
+        },
+        {
+          "w": "tired,",
+          "start": 0.522,
+          "end": 0.888
+        },
+        {
+          "w": "dizzy,",
+          "start": 0.932,
+          "end": 1.334
+        },
+        {
+          "w": "or",
+          "start": 1.424,
+          "end": 1.531
+        },
+        {
+          "w": "just",
+          "start": 1.575,
+          "end": 1.7
+        },
+        {
+          "w": "off?",
+          "start": 1.754,
+          "end": 2.013
+        },
+        {
+          "w": "You",
+          "start": 2.548,
+          "end": 2.647
+        },
+        {
+          "w": "might",
+          "start": 2.683,
+          "end": 2.808
+        },
+        {
+          "w": "be",
+          "start": 2.844,
+          "end": 2.897
+        },
+        {
+          "w": "missing",
+          "start": 2.933,
+          "end": 3.156
+        },
+        {
+          "w": "a",
+          "start": 3.201,
+          "end": 3.218
+        },
+        {
+          "w": "crucial",
+          "start": 3.255,
+          "end": 3.522
+        },
+        {
+          "w": "vitamin.",
+          "start": 3.558,
+          "end": 4.451
+        }
+      ]
+    },
+    {
+      "beat": "setup",
+      "text": "Most people think B12 deficiency only causes anemia, but the signs are sneaky.",
+      "start": 4,
+      "end": 9.38,
+      "words": [
+        {
+          "w": "Most",
+          "start": 4.0,
+          "end": 4.267
+        },
+        {
+          "w": "people",
+          "start": 4.29,
+          "end": 4.522
+        },
+        {
+          "w": "think",
+          "start": 4.569,
+          "end": 4.743
+        },
+        {
+          "w": "B12",
+          "start": 4.813,
+          "end": 5.219
+        },
+        {
+          "w": "deficiency",
+          "start": 5.277,
+          "end": 5.858
+        },
+        {
+          "w": "only",
+          "start": 5.95,
+          "end": 6.206
+        },
+        {
+          "w": "causes",
+          "start": 6.264,
+          "end": 6.589
+        },
+        {
+          "w": "anemia,",
+          "start": 6.635,
+          "end": 7.239
+        },
+        {
+          "w": "but",
+          "start": 7.355,
+          "end": 7.506
+        },
+        {
+          "w": "the",
+          "start": 7.529,
+          "end": 7.599
+        },
+        {
+          "w": "signs",
+          "start": 7.657,
+          "end": 7.936
+        },
+        {
+          "w": "are",
+          "start": 7.971,
+          "end": 8.075
+        },
+        {
+          "w": "sneaky.",
+          "start": 8.11,
+          "end": 9.387
+        }
+      ]
+    },
+    {
+      "beat": "reveal",
+      "text": "Numbness or tingling in hands and feet. Persistent brain fog and memory lapses. Unexplained mood swings or depression.",
+      "start": 10,
+      "end": 19.28,
+      "words": [
+        {
+          "w": "Numbness",
+          "start": 10.0,
+          "end": 10.557
+        },
+        {
+          "w": "or",
+          "start": 10.708,
+          "end": 10.859
+        },
+        {
+          "w": "tingling",
+          "start": 10.917,
+          "end": 11.324
+        },
+        {
+          "w": "in",
+          "start": 11.393,
+          "end": 11.474
+        },
+        {
+          "w": "hands",
+          "start": 11.544,
+          "end": 11.846
+        },
+        {
+          "w": "and",
+          "start": 11.881,
+          "end": 11.962
+        },
+        {
+          "w": "feet.",
+          "start": 12.032,
+          "end": 12.45
+        },
+        {
+          "w": "Persistent",
+          "start": 13.146,
+          "end": 13.68
+        },
+        {
+          "w": "brain",
+          "start": 13.727,
+          "end": 13.982
+        },
+        {
+          "w": "fog",
+          "start": 14.063,
+          "end": 14.342
+        },
+        {
+          "w": "and",
+          "start": 14.389,
+          "end": 14.458
+        },
+        {
+          "w": "memory",
+          "start": 14.54,
+          "end": 14.865
+        },
+        {
+          "w": "lapses.",
+          "start": 14.934,
+          "end": 15.55
+        },
+        {
+          "w": "Unexplained",
+          "start": 16.246,
+          "end": 16.861
+        },
+        {
+          "w": "mood",
+          "start": 16.931,
+          "end": 17.152
+        },
+        {
+          "w": "swings",
+          "start": 17.198,
+          "end": 17.605
+        },
+        {
+          "w": "or",
+          "start": 17.755,
+          "end": 17.906
+        },
+        {
+          "w": "depression.",
+          "start": 17.964,
+          "end": 19.288
+        }
+      ]
+    },
+    {
+      "beat": "twist",
+      "text": "The fastest fix? A single 1000 µg B12 spray each morning can restore levels in days.",
+      "start": 24,
+      "end": 30.24,
+      "words": [
+        {
+          "w": "The",
+          "start": 24.0,
+          "end": 24.125
+        },
+        {
+          "w": "fastest",
+          "start": 24.17,
+          "end": 24.518
+        },
+        {
+          "w": "fix?",
+          "start": 24.562,
+          "end": 24.973
+        },
+        {
+          "w": "A",
+          "start": 25.509,
+          "end": 25.563
+        },
+        {
+          "w": "single",
+          "start": 25.652,
+          "end": 25.947
+        },
+        {
+          "w": "1000",
+          "start": 25.974,
+          "end": 26.483
+        },
+        {
+          "w": "µg",
+          "start": 26.572,
+          "end": 26.795
+        },
+        {
+          "w": "B12",
+          "start": 26.885,
+          "end": 27.278
+        },
+        {
+          "w": "spray",
+          "start": 27.332,
+          "end": 27.635
+        },
+        {
+          "w": "each",
+          "start": 27.885,
+          "end": 28.055
+        },
+        {
+          "w": "morning",
+          "start": 28.108,
+          "end": 28.349
+        },
+        {
+          "w": "can",
+          "start": 28.394,
+          "end": 28.492
+        },
+        {
+          "w": "restore",
+          "start": 28.537,
+          "end": 28.841
+        },
+        {
+          "w": "levels",
+          "start": 28.876,
+          "end": 29.108
+        },
+        {
+          "w": "in",
+          "start": 29.171,
+          "end": 29.26
+        },
+        {
+          "w": "days.",
+          "start": 29.323,
+          "end": 30.252
+        }
+      ]
+    },
+    {
+      "beat": "loop",
+      "text": "Watch for these signs, boost your B12, and feel the energy return.",
+      "start": 30,
+      "end": 34.13,
+      "words": [
+        {
+          "w": "Watch",
+          "start": 30.0,
+          "end": 30.302
+        },
+        {
+          "w": "for",
+          "start": 30.337,
+          "end": 30.43
+        },
+        {
+          "w": "these",
+          "start": 30.476,
+          "end": 30.65
+        },
+        {
+          "w": "signs,",
+          "start": 30.685,
+          "end": 31.115
+        },
+        {
+          "w": "boost",
+          "start": 31.207,
+          "end": 31.463
+        },
+        {
+          "w": "your",
+          "start": 31.498,
+          "end": 31.591
+        },
+        {
+          "w": "B12,",
+          "start": 31.637,
+          "end": 32.264
+        },
+        {
+          "w": "and",
+          "start": 32.415,
+          "end": 32.554
+        },
+        {
+          "w": "feel",
+          "start": 32.624,
+          "end": 32.821
+        },
+        {
+          "w": "the",
+          "start": 32.879,
+          "end": 32.949
+        },
+        {
+          "w": "energy",
+          "start": 33.019,
+          "end": 33.344
+        },
+        {
+          "w": "return.",
+          "start": 33.413,
+          "end": 34.133
+        }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "start": 0,
+      "end": 120,
+      "visual": "Close‑up of a tired face, quick cut to bright B12 pill graphic, bold text: ‘Tired? Dizzy?’.",
+      "kicker": "HOOK"
+    },
+    {
+      "id": "setup",
+      "start": 120,
+      "end": 300,
+      "visual": "Animated list appears showing ‘Anemia?’ with a cross, then question marks swirl around.",
+      "kicker": "PROBLEM"
+    },
+    {
+      "id": "reveal",
+      "start": 300,
+      "end": 720,
+      "visual": "Three quick panels: 1) Numb hands glowing, 2) Brain fog cloud dissolving, 3) Mood swing meter swinging wildly. Each labeled with the sign.",
+      "kicker": "SOLUTION"
+    },
+    {
+      "id": "twist",
+      "start": 720,
+      "end": 900,
+      "visual": "Bottle of B12 spray drops onto a finger, then a timer speeds up showing days passing, energy bars rising.",
+      "kicker": "POWER MOVE"
+    },
+    {
+      "id": "loop",
+      "start": 900,
+      "end": 1050,
+      "visual": "Energy bar fills, camera zooms out to the opening tired face now smiling, looping back to the first frame.",
+      "kicker": "LOOP"
+    }
+  ],
+  "voiceStatus": "elevenlabs:TX3LPaxmHKxFdv7VOQHJ"
+}

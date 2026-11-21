@@ -1,0 +1,578 @@
+{
+  "id": "pg-index-btree-vs-hash",
+  "title": "PostgreSQL Indexing: B-Tree vs Hash",
+  "composition": "PostgresIndexBattle",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 35
+  },
+  "niche": "terminal",
+  "terminalSession": [
+    {
+      "kind": "cmd",
+      "text": "CREATE INDEX idx_users_email ON users(email);",
+      "at": 90,
+      "type": true
+    },
+    {
+      "kind": "ok",
+      "text": "CREATE INDEX",
+      "at": 120
+    },
+    {
+      "kind": "cmd",
+      "text": "CREATE INDEX idx_users_email_hash ON users USING HASH (email);",
+      "at": 210,
+      "type": true
+    },
+    {
+      "kind": "ok",
+      "text": "CREATE INDEX",
+      "at": 240
+    },
+    {
+      "kind": "cmd",
+      "text": "EXPLAIN ANALYZE SELECT * FROM users WHERE email='alice@example.com';",
+      "at": 540,
+      "type": true
+    },
+    {
+      "kind": "out",
+      "text": "Seq Scan on users  (cost=0.00..1.02 rows=1 width=...)",
+      "at": 570
+    },
+    {
+      "kind": "out",
+      "text": "Index Scan using idx_users_email on users  (cost=0.15..0.30 rows=1 width=...)",
+      "at": 600
+    },
+    {
+      "kind": "out",
+      "text": "Hash Index Scan using idx_users_email_hash on users  (cost=0.10..0.20 rows=1 width=...)",
+      "at": 630
+    },
+    {
+      "kind": "out",
+      "text": "Actual time=0.005..0.005 rows=1 loops=1",
+      "at": 660
+    }
+  ],
+  "vo": [
+    {
+      "beat": "hook",
+      "text": "B-Tree or Hash? Which index makes your PostgreSQL queries lightning fast!",
+      "start": 0.2,
+      "end": 5.31,
+      "words": [
+        {
+          "w": "B-Tree",
+          "start": 0.2,
+          "end": 0.62
+        },
+        {
+          "w": "or",
+          "start": 0.665,
+          "end": 0.762
+        },
+        {
+          "w": "Hash?",
+          "start": 0.825,
+          "end": 1.2
+        },
+        {
+          "w": "Which",
+          "start": 1.736,
+          "end": 1.915
+        },
+        {
+          "w": "index",
+          "start": 1.968,
+          "end": 2.209
+        },
+        {
+          "w": "makes",
+          "start": 2.263,
+          "end": 2.397
+        },
+        {
+          "w": "your",
+          "start": 2.424,
+          "end": 2.513
+        },
+        {
+          "w": "PostgreSQL",
+          "start": 2.558,
+          "end": 3.138
+        },
+        {
+          "w": "queries",
+          "start": 3.192,
+          "end": 3.513
+        },
+        {
+          "w": "lightning",
+          "start": 3.674,
+          "end": 3.96
+        },
+        {
+          "w": "fast!",
+          "start": 4.005,
+          "end": 5.308
+        }
+      ]
+    },
+    {
+      "beat": "setup",
+      "text": "Most developers pick B-Tree by default, but they don’t realize Hash can be faster for exact matches.",
+      "start": 3.5,
+      "end": 9.54,
+      "words": [
+        {
+          "w": "Most",
+          "start": 3.5,
+          "end": 3.773
+        },
+        {
+          "w": "developers",
+          "start": 3.807,
+          "end": 4.262
+        },
+        {
+          "w": "pick",
+          "start": 4.307,
+          "end": 4.478
+        },
+        {
+          "w": "B-Tree",
+          "start": 4.535,
+          "end": 4.911
+        },
+        {
+          "w": "by",
+          "start": 4.944,
+          "end": 5.035
+        },
+        {
+          "w": "default,",
+          "start": 5.103,
+          "end": 5.673
+        },
+        {
+          "w": "but",
+          "start": 5.876,
+          "end": 6.024
+        },
+        {
+          "w": "they",
+          "start": 6.048,
+          "end": 6.15
+        },
+        {
+          "w": "don’t",
+          "start": 6.184,
+          "end": 6.354
+        },
+        {
+          "w": "realize",
+          "start": 6.389,
+          "end": 6.741
+        },
+        {
+          "w": "Hash",
+          "start": 6.776,
+          "end": 6.98
+        },
+        {
+          "w": "can",
+          "start": 7.014,
+          "end": 7.116
+        },
+        {
+          "w": "be",
+          "start": 7.151,
+          "end": 7.23
+        },
+        {
+          "w": "faster",
+          "start": 7.287,
+          "end": 7.628
+        },
+        {
+          "w": "for",
+          "start": 7.685,
+          "end": 7.776
+        },
+        {
+          "w": "exact",
+          "start": 7.832,
+          "end": 8.209
+        },
+        {
+          "w": "matches.",
+          "start": 8.265,
+          "end": 9.55
+        }
+      ]
+    },
+    {
+      "beat": "reveal1",
+      "text": "First, create a B-Tree index on the email column.",
+      "start": 9.6,
+      "end": 13.31,
+      "words": [
+        {
+          "w": "First,",
+          "start": 9.6,
+          "end": 10.088
+        },
+        {
+          "w": "create",
+          "start": 10.262,
+          "end": 10.587
+        },
+        {
+          "w": "a",
+          "start": 10.61,
+          "end": 10.633
+        },
+        {
+          "w": "B-Tree",
+          "start": 10.715,
+          "end": 11.179
+        },
+        {
+          "w": "index",
+          "start": 11.225,
+          "end": 11.55
+        },
+        {
+          "w": "on",
+          "start": 11.62,
+          "end": 11.69
+        },
+        {
+          "w": "the",
+          "start": 11.725,
+          "end": 11.794
+        },
+        {
+          "w": "email",
+          "start": 11.852,
+          "end": 12.119
+        },
+        {
+          "w": "column.",
+          "start": 12.177,
+          "end": 13.315
+        }
+      ]
+    },
+    {
+      "beat": "reveal2",
+      "text": "Now, create a Hash index on the same column.",
+      "start": 13.7,
+      "end": 17.12,
+      "words": [
+        {
+          "w": "Now,",
+          "start": 13.7,
+          "end": 14.037
+        },
+        {
+          "w": "create",
+          "start": 14.083,
+          "end": 14.42
+        },
+        {
+          "w": "a",
+          "start": 14.443,
+          "end": 14.466
+        },
+        {
+          "w": "Hash",
+          "start": 14.559,
+          "end": 14.884
+        },
+        {
+          "w": "index",
+          "start": 14.965,
+          "end": 15.325
+        },
+        {
+          "w": "on",
+          "start": 15.383,
+          "end": 15.465
+        },
+        {
+          "w": "the",
+          "start": 15.5,
+          "end": 15.569
+        },
+        {
+          "w": "same",
+          "start": 15.616,
+          "end": 15.848
+        },
+        {
+          "w": "column.",
+          "start": 15.894,
+          "end": 17.137
+        }
+      ]
+    },
+    {
+      "beat": "reveal3",
+      "text": "Run EXPLAIN ANALYZE on a lookup query and compare the plans.",
+      "start": 17.8,
+      "end": 23.85,
+      "words": [
+        {
+          "w": "Run",
+          "start": 17.8,
+          "end": 18.158
+        },
+        {
+          "w": "EXPLAIN",
+          "start": 18.759,
+          "end": 19.474
+        },
+        {
+          "w": "ANALYZE",
+          "start": 20.074,
+          "end": 20.675
+        },
+        {
+          "w": "on",
+          "start": 20.71,
+          "end": 20.778
+        },
+        {
+          "w": "a",
+          "start": 20.825,
+          "end": 20.848
+        },
+        {
+          "w": "lookup",
+          "start": 20.918,
+          "end": 21.229
+        },
+        {
+          "w": "query",
+          "start": 21.299,
+          "end": 21.691
+        },
+        {
+          "w": "and",
+          "start": 21.899,
+          "end": 22.072
+        },
+        {
+          "w": "compare",
+          "start": 22.141,
+          "end": 22.522
+        },
+        {
+          "w": "the",
+          "start": 22.557,
+          "end": 22.626
+        },
+        {
+          "w": "plans.",
+          "start": 22.661,
+          "end": 23.85
+        }
+      ]
+    },
+    {
+      "beat": "twist",
+      "text": "Enable hash index support with `SET enable_hashagg = on;` and watch the planner pick O(1) lookups.",
+      "start": 23.9,
+      "end": 30.94,
+      "words": [
+        {
+          "w": "Enable",
+          "start": 23.9,
+          "end": 24.266
+        },
+        {
+          "w": "hash",
+          "start": 24.311,
+          "end": 24.543
+        },
+        {
+          "w": "index",
+          "start": 24.605,
+          "end": 24.882
+        },
+        {
+          "w": "support",
+          "start": 24.909,
+          "end": 25.177
+        },
+        {
+          "w": "with",
+          "start": 25.213,
+          "end": 25.347
+        },
+        {
+          "w": "`SET",
+          "start": 25.463,
+          "end": 25.856
+        },
+        {
+          "w": "enable_hashagg",
+          "start": 25.901,
+          "end": 26.963
+        },
+        {
+          "w": "=",
+          "start": 27.079,
+          "end": 27.472
+        },
+        {
+          "w": "on;`",
+          "start": 27.544,
+          "end": 27.945
+        },
+        {
+          "w": "and",
+          "start": 28.338,
+          "end": 28.445
+        },
+        {
+          "w": "watch",
+          "start": 28.508,
+          "end": 28.714
+        },
+        {
+          "w": "the",
+          "start": 28.741,
+          "end": 28.794
+        },
+        {
+          "w": "planner",
+          "start": 28.83,
+          "end": 29.071
+        },
+        {
+          "w": "pick",
+          "start": 29.115,
+          "end": 29.258
+        },
+        {
+          "w": "O(1)",
+          "start": 29.33,
+          "end": 29.803
+        },
+        {
+          "w": "lookups.",
+          "start": 29.857,
+          "end": 30.938
+        }
+      ]
+    },
+    {
+      "beat": "loop",
+      "text": "B-Tree vs Hash—pick the right one and keep your queries blazing.",
+      "start": 30,
+      "end": 34.31,
+      "words": [
+        {
+          "w": "B-Tree",
+          "start": 30.0,
+          "end": 30.441
+        },
+        {
+          "w": "vs",
+          "start": 30.488,
+          "end": 30.778
+        },
+        {
+          "w": "Hash—pick",
+          "start": 30.859,
+          "end": 31.707
+        },
+        {
+          "w": "the",
+          "start": 31.765,
+          "end": 31.834
+        },
+        {
+          "w": "right",
+          "start": 31.892,
+          "end": 32.09
+        },
+        {
+          "w": "one",
+          "start": 32.148,
+          "end": 32.461
+        },
+        {
+          "w": "and",
+          "start": 32.519,
+          "end": 32.717
+        },
+        {
+          "w": "keep",
+          "start": 32.786,
+          "end": 32.961
+        },
+        {
+          "w": "your",
+          "start": 33.007,
+          "end": 33.111
+        },
+        {
+          "w": "queries",
+          "start": 33.158,
+          "end": 33.506
+        },
+        {
+          "w": "blazing.",
+          "start": 33.553,
+          "end": 34.319
+        }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "start": 0,
+      "end": 4,
+      "visual": "Fast cut to query speed meter, bold text: B‑Tree vs Hash",
+      "kicker": "HOOK"
+    },
+    {
+      "id": "setup",
+      "start": 4,
+      "end": 10,
+      "visual": "Developer typing, confused face, highlighting default index choice",
+      "kicker": "PROBLEM"
+    },
+    {
+      "id": "reveal",
+      "start": 10,
+      "end": 24,
+      "visual": "Side‑by‑side index creation commands, scrolling EXPLAIN output comparing plans",
+      "kicker": "SOLVE"
+    },
+    {
+      "id": "twist",
+      "start": 24,
+      "end": 30,
+      "visual": "Terminal command enabling hash, speed gauge spikes, O(1) badge appears",
+      "kicker": "POWER"
+    },
+    {
+      "id": "loop",
+      "start": 30,
+      "end": 35,
+      "visual": "Loop back to opening speed meter, text repeats to create seamless loop",
+      "kicker": "LOOP"
+    }
+  ],
+  "voiceStatus": "elevenlabs:TX3LPaxmHKxFdv7VOQHJ"
+}

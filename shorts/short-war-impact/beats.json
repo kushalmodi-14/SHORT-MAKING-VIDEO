@@ -1,0 +1,89 @@
+{
+  "id": "short-war-impact",
+  "title": "War's Hidden Cost",
+  "composition": "ShortExample",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 35
+  },
+  "niche": "terminal",
+  "terminalSession": [
+    {
+      "kind": "cmd",
+      "text": "curl -s https://api.un.org/warstats | jq '.'",
+      "at": 0,
+      "type": true
+    }
+  ],
+  "vo": [
+    {
+      "beat": "hook",
+      "text": "Listen, every day war steals a child's future, tearing families from their homes.",
+      "start": 0.4,
+      "end": 3.8
+    },
+    {
+      "beat": "setup",
+      "text": "Cities crumble, streets become ash, mothers search for food while bombs keep falling.",
+      "start": 4.2,
+      "end": 9.8
+    },
+    {
+      "beat": "reveal",
+      "text": "First, we see the shattered skyline, then the faces of those left behind, and finally the brave volunteers delivering aid, bringing hope amid chaos.",
+      "start": 10.2,
+      "end": 23.8
+    },
+    {
+      "beat": "twist",
+      "text": "But the real power lies in our silence—when we ignore the cries, the war wins.",
+      "start": 24.2,
+      "end": 29.8
+    },
+    {
+      "beat": "loop",
+      "text": "Choose peace, act now, and let the story start again.",
+      "start": 30.2,
+      "end": 34.8
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "start": 0,
+      "end": 120,
+      "visual": "A stark, black‑and‑white close‑up of a child's empty swing moving in the wind, text overlay: \"War steals innocence\"",
+      "kicker": "HOOK"
+    },
+    {
+      "id": "setup",
+      "start": 120,
+      "end": 300,
+      "visual": "Aerial view of a bombed city, smoke rising, families carrying belongings, caption: \"Cities reduced to rubble\"",
+      "kicker": "PROBLEM"
+    },
+    {
+      "id": "reveal",
+      "start": 300,
+      "end": 720,
+      "visual": "Sequence: collapsed buildings, a mother holding a starving child, volunteers handing out water, rescue helicopters landing",
+      "kicker": "SOLUTION"
+    },
+    {
+      "id": "twist",
+      "start": 720,
+      "end": 900,
+      "visual": "Silhouette of a soldier turning away, overlay: \"Silence fuels war\"",
+      "kicker": "POWER MOVE"
+    },
+    {
+      "id": "loop",
+      "start": 900,
+      "end": 1050,
+      "visual": "Fade to white text \"Choose peace\" that loops back to the child's swing",
+      "kicker": "LOOP"
+    }
+  ]
+}
