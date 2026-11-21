@@ -1,0 +1,618 @@
+{
+  "id": "redis-caching-nodejs",
+  "title": "Redis Caching in Node.js: 200x Speedup",
+  "composition": "RedisCacheShort",
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationSec": 35
+  },
+  "niche": "terminal",
+  "terminalSession": [
+    {
+      "kind": "cmd",
+      "text": "npm i redis",
+      "at": 150,
+      "type": true
+    },
+    {
+      "kind": "out",
+      "text": "+ redis@4.0.0 installed",
+      "at": 180,
+      "type": false
+    },
+    {
+      "kind": "cmd",
+      "text": "node server.js",
+      "at": 210,
+      "type": true
+    },
+    {
+      "kind": "out",
+      "text": "GET /users → cache miss",
+      "at": 240,
+      "type": false
+    },
+    {
+      "kind": "out",
+      "text": "GET /users → cache hit (0ms)",
+      "at": 300,
+      "type": false
+    }
+  ],
+  "vo": [
+    {
+      "beat": "hook",
+      "text": "Watch how a simple Redis cache can make your Node API 200 times faster!",
+      "start": 0.4,
+      "end": 3.8,
+      "words": [
+        {
+          "w": "Watch",
+          "start": 0.4,
+          "end": 0.69
+        },
+        {
+          "w": "how",
+          "start": 0.71,
+          "end": 0.82
+        },
+        {
+          "w": "a",
+          "start": 0.89,
+          "end": 0.91
+        },
+        {
+          "w": "simple",
+          "start": 0.98,
+          "end": 1.29
+        },
+        {
+          "w": "Redis",
+          "start": 1.35,
+          "end": 1.62
+        },
+        {
+          "w": "cache",
+          "start": 1.69,
+          "end": 2.04
+        },
+        {
+          "w": "can",
+          "start": 2.07,
+          "end": 2.19
+        },
+        {
+          "w": "make",
+          "start": 2.25,
+          "end": 2.41
+        },
+        {
+          "w": "your",
+          "start": 2.44,
+          "end": 2.57
+        },
+        {
+          "w": "Node",
+          "start": 2.65,
+          "end": 2.9
+        },
+        {
+          "w": "API",
+          "start": 2.94,
+          "end": 3.37
+        },
+        {
+          "w": "200",
+          "start": 3.49,
+          "end": 4.05
+        },
+        {
+          "w": "times",
+          "start": 4.09,
+          "end": 4.41
+        },
+        {
+          "w": "faster!",
+          "start": 4.48,
+          "end": 5.28
+        }
+      ]
+    },
+    {
+      "beat": "setup",
+      "text": "Most Node apps hit the database on every request, causing latency and wasted resources.",
+      "start": 4,
+      "end": 9.8,
+      "words": [
+        {
+          "w": "Most",
+          "start": 4,
+          "end": 4.31
+        },
+        {
+          "w": "Node",
+          "start": 4.38,
+          "end": 4.59
+        },
+        {
+          "w": "apps",
+          "start": 4.62,
+          "end": 4.81
+        },
+        {
+          "w": "hit",
+          "start": 4.85,
+          "end": 4.97
+        },
+        {
+          "w": "the",
+          "start": 5.01,
+          "end": 5.08
+        },
+        {
+          "w": "database",
+          "start": 5.14,
+          "end": 5.6
+        },
+        {
+          "w": "on",
+          "start": 5.64,
+          "end": 5.72
+        },
+        {
+          "w": "every",
+          "start": 5.8,
+          "end": 6.05
+        },
+        {
+          "w": "request,",
+          "start": 6.13,
+          "end": 6.72
+        },
+        {
+          "w": "causing",
+          "start": 6.96,
+          "end": 7.3
+        },
+        {
+          "w": "latency",
+          "start": 7.37,
+          "end": 7.81
+        },
+        {
+          "w": "and",
+          "start": 7.86,
+          "end": 7.94
+        },
+        {
+          "w": "wasted",
+          "start": 8.02,
+          "end": 8.37
+        },
+        {
+          "w": "resources.",
+          "start": 8.42,
+          "end": 9.39
+        }
+      ]
+    },
+    {
+      "beat": "reveal",
+      "text": "First, install the Redis client and connect it to your server. Then wrap your database query in a get-or-set function that checks the cache before querying. If the key exists, return the cached value instantly; otherwise fetch from DB and store it.",
+      "start": 10,
+      "end": 23.8,
+      "words": [
+        {
+          "w": "First,",
+          "start": 10,
+          "end": 10.53
+        },
+        {
+          "w": "install",
+          "start": 10.65,
+          "end": 11.04
+        },
+        {
+          "w": "the",
+          "start": 11.09,
+          "end": 11.16
+        },
+        {
+          "w": "Redis",
+          "start": 11.24,
+          "end": 11.51
+        },
+        {
+          "w": "client",
+          "start": 11.57,
+          "end": 12
+        },
+        {
+          "w": "and",
+          "start": 12.11,
+          "end": 12.29
+        },
+        {
+          "w": "connect",
+          "start": 12.35,
+          "end": 12.63
+        },
+        {
+          "w": "it",
+          "start": 12.67,
+          "end": 12.73
+        },
+        {
+          "w": "to",
+          "start": 12.76,
+          "end": 12.82
+        },
+        {
+          "w": "your",
+          "start": 12.89,
+          "end": 13.01
+        },
+        {
+          "w": "server.",
+          "start": 13.05,
+          "end": 13.54
+        },
+        {
+          "w": "Then",
+          "start": 13.92,
+          "end": 14.13
+        },
+        {
+          "w": "wrap",
+          "start": 14.2,
+          "end": 14.42
+        },
+        {
+          "w": "your",
+          "start": 14.48,
+          "end": 14.59
+        },
+        {
+          "w": "database",
+          "start": 14.63,
+          "end": 15.04
+        },
+        {
+          "w": "query",
+          "start": 15.07,
+          "end": 15.38
+        },
+        {
+          "w": "in",
+          "start": 15.46,
+          "end": 15.55
+        },
+        {
+          "w": "a",
+          "start": 15.61,
+          "end": 15.67
+        },
+        {
+          "w": "get-or-set",
+          "start": 15.84,
+          "end": 16.71
+        },
+        {
+          "w": "function",
+          "start": 16.78,
+          "end": 17.25
+        },
+        {
+          "w": "that",
+          "start": 17.45,
+          "end": 17.63
+        },
+        {
+          "w": "checks",
+          "start": 17.67,
+          "end": 17.96
+        },
+        {
+          "w": "the",
+          "start": 18,
+          "end": 18.07
+        },
+        {
+          "w": "cache",
+          "start": 18.12,
+          "end": 18.43
+        },
+        {
+          "w": "before",
+          "start": 18.48,
+          "end": 18.87
+        },
+        {
+          "w": "querying.",
+          "start": 18.93,
+          "end": 19.5
+        },
+        {
+          "w": "If",
+          "start": 20.19,
+          "end": 20.34
+        },
+        {
+          "w": "the",
+          "start": 20.39,
+          "end": 20.46
+        },
+        {
+          "w": "key",
+          "start": 20.51,
+          "end": 20.67
+        },
+        {
+          "w": "exists,",
+          "start": 20.72,
+          "end": 21.38
+        },
+        {
+          "w": "return",
+          "start": 21.66,
+          "end": 22.03
+        },
+        {
+          "w": "the",
+          "start": 22.09,
+          "end": 22.16
+        },
+        {
+          "w": "cached",
+          "start": 22.19,
+          "end": 22.49
+        },
+        {
+          "w": "value",
+          "start": 22.54,
+          "end": 22.84
+        },
+        {
+          "w": "instantly;",
+          "start": 22.88,
+          "end": 23.5
+        },
+        {
+          "w": "otherwise",
+          "start": 23.83,
+          "end": 24.29
+        },
+        {
+          "w": "fetch",
+          "start": 24.35,
+          "end": 24.56
+        },
+        {
+          "w": "from",
+          "start": 24.59,
+          "end": 24.72
+        },
+        {
+          "w": "DB",
+          "start": 24.78,
+          "end": 25.05
+        },
+        {
+          "w": "and",
+          "start": 25.22,
+          "end": 25.34
+        },
+        {
+          "w": "store",
+          "start": 25.41,
+          "end": 25.66
+        },
+        {
+          "w": "it.",
+          "start": 25.7,
+          "end": 26.11
+        }
+      ]
+    },
+    {
+      "beat": "twist",
+      "text": "Bonus: set a short TTL so stale data expires automatically, keeping your cache fresh without extra code.",
+      "start": 24,
+      "end": 29.8,
+      "words": [
+        {
+          "w": "Bonus:",
+          "start": 24,
+          "end": 24.64
+        },
+        {
+          "w": "set",
+          "start": 24.96,
+          "end": 25.16
+        },
+        {
+          "w": "a",
+          "start": 25.21,
+          "end": 25.23
+        },
+        {
+          "w": "short",
+          "start": 25.3,
+          "end": 25.58
+        },
+        {
+          "w": "TTL",
+          "start": 25.63,
+          "end": 26.21
+        },
+        {
+          "w": "so",
+          "start": 26.32,
+          "end": 26.46
+        },
+        {
+          "w": "stale",
+          "start": 26.55,
+          "end": 27.1
+        },
+        {
+          "w": "data",
+          "start": 27.61,
+          "end": 27.89
+        },
+        {
+          "w": "expires",
+          "start": 27.95,
+          "end": 28.46
+        },
+        {
+          "w": "automatically,",
+          "start": 28.54,
+          "end": 29.46
+        },
+        {
+          "w": "keeping",
+          "start": 29.63,
+          "end": 29.92
+        },
+        {
+          "w": "your",
+          "start": 29.97,
+          "end": 30.07
+        },
+        {
+          "w": "cache",
+          "start": 30.12,
+          "end": 30.41
+        },
+        {
+          "w": "fresh",
+          "start": 30.44,
+          "end": 30.72
+        },
+        {
+          "w": "without",
+          "start": 30.77,
+          "end": 31.13
+        },
+        {
+          "w": "extra",
+          "start": 31.19,
+          "end": 31.45
+        },
+        {
+          "w": "code.",
+          "start": 31.5,
+          "end": 32.13
+        }
+      ]
+    },
+    {
+      "beat": "loop",
+      "text": "Now every request is served from memory—watch the latency drop to milliseconds!",
+      "start": 30,
+      "end": 34.8,
+      "words": [
+        {
+          "w": "Now",
+          "start": 30,
+          "end": 30.2
+        },
+        {
+          "w": "every",
+          "start": 30.25,
+          "end": 30.43
+        },
+        {
+          "w": "request",
+          "start": 30.49,
+          "end": 30.85
+        },
+        {
+          "w": "is",
+          "start": 30.91,
+          "end": 30.99
+        },
+        {
+          "w": "served",
+          "start": 31.02,
+          "end": 31.29
+        },
+        {
+          "w": "from",
+          "start": 31.32,
+          "end": 31.45
+        },
+        {
+          "w": "memory—watch",
+          "start": 31.51,
+          "end": 32.45
+        },
+        {
+          "w": "the",
+          "start": 32.52,
+          "end": 32.59
+        },
+        {
+          "w": "latency",
+          "start": 32.66,
+          "end": 33.08
+        },
+        {
+          "w": "drop",
+          "start": 33.13,
+          "end": 33.37
+        },
+        {
+          "w": "to",
+          "start": 33.42,
+          "end": 33.48
+        },
+        {
+          "w": "milliseconds!",
+          "start": 33.55,
+          "end": 34.6
+        }
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "id": "hook",
+      "start": 0,
+      "end": 4,
+      "visual": "Fast‑motion shot of a loading spinner exploding, then bold text: 200× Faster!",
+      "kicker": "HOOK"
+    },
+    {
+      "id": "setup",
+      "start": 4,
+      "end": 10,
+      "visual": "Screen shows Node server hitting PostgreSQL on each request, red latency graph rising.",
+      "kicker": "PROBLEM"
+    },
+    {
+      "id": "reveal",
+      "start": 10,
+      "end": 24,
+      "visual": "Split screen: left side code installing redis, right side cache‑hit vs miss timestamps.",
+      "kicker": "SOLUTION"
+    },
+    {
+      "id": "twist",
+      "start": 24,
+      "end": 30,
+      "visual": "Overlay of TTL timer counting down, cache auto‑refresh animation.",
+      "kicker": "POWER MOVE"
+    },
+    {
+      "id": "loop",
+      "start": 30,
+      "end": 35,
+      "visual": "Loop back to the exploding spinner now replaced by a lightning bolt, then back to hook frame.",
+      "kicker": "LOOP"
+    }
+  ]
+}

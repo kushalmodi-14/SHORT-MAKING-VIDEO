@@ -12361,7 +12361,7 @@ const RemotionRoot = () => {
         height: 1920
       }
     ),
-    shots.map(({ Comp, config }) => /* @__PURE__ */ (0,jsx_runtime.jsx)(
+    shots.filter(({ config }) => config.id !== "ShortTemplate").map(({ Comp, config }) => /* @__PURE__ */ (0,jsx_runtime.jsx)(
       esm.Composition,
       {
         id: config.id,
@@ -54326,7 +54326,7 @@ addSequenceStackTraces(Folder);
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("ed3078ad9df4095f")
+/******/ 		__webpack_require__.h = () => ("eb5eab991de24ecd")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

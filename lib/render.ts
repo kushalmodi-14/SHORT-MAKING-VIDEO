@@ -95,6 +95,19 @@ export async function runGenerationPipeline(
   });
 
   if (IS_VERCEL) {
+    // Ensure AWS_EXECUTION_ENV is set so @sparticuz/chromium detects the AL2023 container
+    // and extracts required shared libraries (libnss3.so, libnspr4.so) into /tmp/al2023/lib
+    if (!process.env.AWS_EXECUTION_ENV) {
+      process.env.AWS_EXECUTION_ENV = 'AWS_Lambda_nodejs20.x';
+    }
+    const al2023Lib = '/tmp/al2023/lib';
+    process.env.FONTCONFIG_PATH = '/tmp/fonts';
+    if (!process.env.LD_LIBRARY_PATH) {
+      process.env.LD_LIBRARY_PATH = al2023Lib;
+    } else if (!process.env.LD_LIBRARY_PATH.includes(al2023Lib)) {
+      process.env.LD_LIBRARY_PATH = `${al2023Lib}:${process.env.LD_LIBRARY_PATH}`;
+    }
+
     // Vercel Serverless Function mode: render via @remotion/renderer and @sparticuz/chromium
     const { selectComposition, renderMedia } = await import(/* webpackIgnore: true */ '@remotion/renderer');
     const chromium = (await import(/* webpackIgnore: true */ '@sparticuz/chromium')).default;
