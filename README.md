@@ -1,3 +1,13 @@
+---
+title: Faceless Shorts Factory
+emoji: 🎬
+colorFrom: purple
+colorTo: indigo
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # claude-faceless-shorts-creator
 
 **A faceless YouTube-Shorts factory you drive with [Claude Code](https://claude.com/claude-code).**

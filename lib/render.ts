@@ -94,9 +94,38 @@ export async function runGenerationPipeline(
     message: `${activeBeats.composition}: 0%`,
   });
 
+  // Prefer pre-bundled Remotion build to avoid runtime bundling overhead
+  const prebuiltBundle = path.join(ROOT_DIR, 'remotion-build');
+  let serveUrl: string;
+
+  if (fs.existsSync(path.join(prebuiltBundle, 'index.html'))) {
+    serveUrl = prebuiltBundle;
+  } else {
+    const { bundle } = await import(/* webpackIgnore: true */ '@remotion/bundler');
+    serveUrl = await bundle({
+      entryPoint: path.join(REMOTION_DIR, 'src', 'index.ts'),
+      outDir: path.join(os.tmpdir(), 'remotion-bundle'),
+    });
+  }
+
+  const { selectComposition, renderMedia } = await import(/* webpackIgnore: true */ '@remotion/renderer');
+
+  // Determine browser executable:
+  // In Docker / Linux (e.g. Hugging Face Spaces): /usr/bin/chromium
+  // In Vercel: @sparticuz/chromium
+  // In local development: Remotion managed Chrome (undefined)
+  let executablePath: string | undefined =
+    process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN || undefined;
+
+  let chromiumArgs: string[] = [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-dev-shm-usage',
+    '--disable-gpu',
+    '--no-zygote',
+  ];
+
   if (IS_VERCEL) {
-    // Ensure AWS_EXECUTION_ENV is set so @sparticuz/chromium detects the AL2023 container
-    // and extracts required shared libraries (libnss3.so, libnspr4.so) into /tmp/al2023/lib
     if (!process.env.AWS_EXECUTION_ENV) {
       process.env.AWS_EXECUTION_ENV = 'AWS_Lambda_nodejs20.x';
     }
@@ -107,106 +136,47 @@ export async function runGenerationPipeline(
     } else if (!process.env.LD_LIBRARY_PATH.includes(al2023Lib)) {
       process.env.LD_LIBRARY_PATH = `${al2023Lib}:${process.env.LD_LIBRARY_PATH}`;
     }
-
-    // Vercel Serverless Function mode: render via @remotion/renderer and @sparticuz/chromium
-    const { selectComposition, renderMedia } = await import(/* webpackIgnore: true */ '@remotion/renderer');
-    const chromium = (await import(/* webpackIgnore: true */ '@sparticuz/chromium')).default;
-
-    chromium.setGraphicsMode = false;
-    const executablePath = await chromium.executablePath();
-
-    // Prefer pre-bundled Remotion build to avoid runtime bundling overhead and missing dependencies
-    const prebuiltBundle = path.join(ROOT_DIR, 'remotion-build');
-    let serveUrl: string;
-
-    if (fs.existsSync(path.join(prebuiltBundle, 'index.html'))) {
-      serveUrl = prebuiltBundle;
-    } else {
-      const { bundle } = await import(/* webpackIgnore: true */ '@remotion/bundler');
-      serveUrl = await bundle({
-        entryPoint: path.join(REMOTION_DIR, 'src', 'index.ts'),
-        outDir: path.join(os.tmpdir(), 'remotion-bundle'),
-      });
-    }
-
-    const composition = await selectComposition({
-      serveUrl,
-      id: 'ShortTemplate',
-      inputProps,
-      browserExecutable: executablePath,
-      chromiumOptions: {
-        args: chromium.args,
-      },
-    });
-
-    await renderMedia({
-      serveUrl,
-      composition,
-      inputProps,
-      outputLocation: rawRenderedFile,
-      codec: 'h264',
-      browserExecutable: executablePath,
-      chromiumOptions: {
-        args: chromium.args,
-      },
-      onProgress: ({ progress }: { progress: number }) => {
-        const pct = Math.min(100, Math.max(0, Math.round(progress * 100)));
-        const overallProgress = Math.min(95, 50 + Math.round(pct * 0.45));
-        updateJob(jobId, {
-          status: 'rendering',
-          progress: overallProgress,
-          renderPercent: pct,
-          message: `${activeBeats.composition}: ${pct}%`,
-        });
-      },
-    });
-  } else {
-    // Local development mode: execute render via local Remotion scripts
-    await new Promise<void>((resolve, reject) => {
-      const child = spawn(
-        'node',
-        ['scripts/render-all.mjs', 'ShortTemplate', '--scale=1'],
-        { cwd: REMOTION_DIR, shell: true }
-      );
-
-      let errorOutput = '';
-
-      child.stdout.on('data', (chunk: Buffer) => {
-        const text = chunk.toString();
-        process.stdout.write(text);
-
-        const match = text.match(/(\d{1,3})%/);
-        if (match) {
-          const pct = Math.min(100, Math.max(0, parseInt(match[1], 10)));
-          const overallProgress = Math.min(95, 50 + Math.round(pct * 0.45));
-          updateJob(jobId, {
-            status: 'rendering',
-            progress: overallProgress,
-            renderPercent: pct,
-            message: `${activeBeats.composition}: ${pct}%`,
-          });
-        }
-      });
-
-      child.stderr.on('data', (chunk: Buffer) => {
-        const text = chunk.toString();
-        errorOutput += text;
-        process.stderr.write(text);
-      });
-
-      child.on('close', (code) => {
-        if (code === 0) resolve();
-        else reject(new Error(`Render failed (code ${code}): ${errorOutput.slice(-300)}`));
-      });
-
-      child.on('error', (err) => reject(err));
-    });
-
-    const localOut = path.join(REMOTION_DIR, 'out', 'ShortTemplate.mp4');
-    if (fs.existsSync(localOut)) {
-      fs.copyFileSync(localOut, rawRenderedFile);
+    try {
+      const chromium = (await import(/* webpackIgnore: true */ '@sparticuz/chromium')).default;
+      chromium.setGraphicsMode = false;
+      executablePath = await chromium.executablePath();
+      chromiumArgs = chromium.args;
+    } catch (e: any) {
+      console.warn('Vercel chromium initialization warning:', e.message);
     }
   }
+
+  const composition = await selectComposition({
+    serveUrl,
+    id: 'ShortTemplate',
+    inputProps,
+    browserExecutable: executablePath,
+    chromiumOptions: {
+      args: chromiumArgs,
+    },
+  });
+
+  await renderMedia({
+    serveUrl,
+    composition,
+    inputProps,
+    outputLocation: rawRenderedFile,
+    codec: 'h264',
+    browserExecutable: executablePath,
+    chromiumOptions: {
+      args: chromiumArgs,
+    },
+    onProgress: ({ progress }: { progress: number }) => {
+      const pct = Math.min(100, Math.max(0, Math.round(progress * 100)));
+      const overallProgress = Math.min(95, 50 + Math.round(pct * 0.45));
+      updateJob(jobId, {
+        status: 'rendering',
+        progress: overallProgress,
+        renderPercent: pct,
+        message: `${activeBeats.composition}: ${pct}%`,
+      });
+    },
+  });
 
   // 5. Audio-Video Muxing using ffmpeg-static (no system ffmpeg install required)
   const finalVoicedMp4 = path.join(PUBLIC_VIDEOS_DIR, destinationName);
